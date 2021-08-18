@@ -37,12 +37,28 @@ GUITAR_WEIGHTS = {
     "G":  1,
     "G#": .2,
 }
+CHORD_MODES = {
+    "maj": {"weight": 1, "relation": 0},
+    "min": {"weight": 1, "relation": -3},
+}
+
+
+def random_mode_of_chord(chord):
+    mode = random.choices(
+        tuple(CHORD_MODES.keys()), weights=[item["weight"] for item in CHORD_MODES.values()]
+    )[0]
+    relation = CHORD_MODES[mode]['relation']
+    new_chord_index = NOTES.index(chord) + relation
+    new_chord = NOTES[new_chord_index]
+    if mode != "maj":
+        new_chord += mode
+    return new_chord
 
 
 def random_major_chord_guitar_weighted():
-    return random.choices(
-        tuple(GUITAR_WEIGHTS.keys()), weights=tuple(GUITAR_WEIGHTS.values())
-    )[0]
+    return random_mode_of_chord(
+        random.choices(tuple(GUITAR_WEIGHTS.keys()), weights=tuple(GUITAR_WEIGHTS.values()))[0]
+    )
 
 
 def note_distance(note_a, note_b):
@@ -90,7 +106,7 @@ def main(verbosity=0):
     logger.debug("%s chords per line", num_chords_per_line)
     logger.debug("%s lines per verse", num_lines_per_verse)
     print(f"{num_introductory_verses} introductory verses (verses not followed by a chorus)")
-    print(f"{num_verses} verses total")
+    print(f"{num_verses} verses total\n")
     if verbosity == 0:
         song.append(verse)
         song.append(chorus)
