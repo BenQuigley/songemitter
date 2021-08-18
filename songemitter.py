@@ -41,6 +41,7 @@ CHORD_MODES = {
     "maj": {"weight": 1, "relation": 0},
     "min": {"weight": 1, "relation": -3},
 }
+VERSE_SCHEMA = {'abba', 'abab', 'abc'}
 
 
 def random_mode_of_chord(chord):
@@ -72,9 +73,10 @@ def make_line(num_chords_per_line):
     return tuple(random_major_chord_guitar_weighted() for _ in range(num_chords_per_line))
 
 
-def make_verse(num_lines_per_verse, num_chords_per_line):
-    return tuple(make_line(num_chords_per_line) for _ in range(num_lines_per_verse))
-
+def make_verse(num_chords_per_line):
+    scheme = random.choice(tuple(VERSE_SCHEMA))
+    lines = {key: make_line(num_chords_per_line) for key in scheme}
+    return tuple(lines[key] for key in scheme)
 
 def format_verse(lines, name="verse"):
     verse = [f"[{name}]\n"]
@@ -85,17 +87,15 @@ def format_verse(lines, name="verse"):
 
 def main(verbosity=0):
     num_introductory_verses = random.randrange(0, 2)  # verses not followed by a chorus  # nosec
-    num_lines_per_verse = 4
     num_chords_per_line = random.randrange(2, 5)  # nosec
     num_verses = random.randrange(max(4, num_introductory_verses), 6)  # nosec
     capo = random.choice((None, random.randrange(1, 7)))  # nosec
-    verse = format_verse(make_verse(num_lines_per_verse, num_chords_per_line))
-    chorus = format_verse(make_verse(num_lines_per_verse, num_chords_per_line), name="chorus")
+    verse = format_verse(make_verse(num_chords_per_line))
+    chorus = format_verse(make_verse(num_chords_per_line), name="chorus")
     capo_note = f"Capo {capo}"
     song = [capo_note] if capo else []
     logger.debug(capo_note)
     logger.debug("%s chords per line", num_chords_per_line)
-    logger.debug("%s lines per verse", num_lines_per_verse)
     print(f"{num_introductory_verses} introductory verses (verses not followed by a chorus)")
     print(f"{num_verses} verses total\n")
     if verbosity == 0:
