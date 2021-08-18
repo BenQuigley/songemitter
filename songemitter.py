@@ -93,17 +93,17 @@ def main(verbosity=0):
     capo = random.choice((None, random.randrange(1, 7)))  # nosec
     verse = format_verse(make_verse(num_chords_per_line))
     chorus = format_verse(make_verse(num_chords_per_line), name="chorus")
-    capo_note = f"Capo {capo}"
     time_signature = random.choice(tuple(TIME_SIGNATURES))
-    time_signature_note = f"Time signature: {time_signature}"
     tempo = random.randrange(50, 120)
-    tempo_note = f"Tempo: {tempo} BPM"
-    song = [time_signature_note, tempo_note]
-    song += [capo_note] if capo else []
-    logger.debug(capo_note)
-    logger.debug("%s chords per line", num_chords_per_line)
-    print(f"{num_introductory_verses} introductory verses (verses not followed by a chorus)")
-    print(f"{num_verses} verses total\n")
+    header = (
+        f"Time signature: {time_signature}\n"
+        f"Tempo: {tempo} BPM\n"
+        f"{num_introductory_verses} introductory verses (verses not followed by a chorus)\n"
+        f"{num_verses} verses total\n"
+    )
+    if capo:
+        header += f"Capo {capo}\n"
+    song = [header.strip()]
     if verbosity == 0:
         song.append(verse)
         song.append(chorus)
