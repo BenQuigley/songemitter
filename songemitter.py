@@ -42,6 +42,7 @@ CHORD_MODES = {
     "min": {"weight": 1, "relation": -3},
 }
 VERSE_SCHEMA = {'abba', 'abab', 'abc'}
+TIME_SIGNATURES = {'4/4', '3/4'}
 
 
 def random_mode_of_chord(chord):
@@ -93,7 +94,12 @@ def main(verbosity=0):
     verse = format_verse(make_verse(num_chords_per_line))
     chorus = format_verse(make_verse(num_chords_per_line), name="chorus")
     capo_note = f"Capo {capo}"
-    song = [capo_note] if capo else []
+    time_signature = random.choice(tuple(TIME_SIGNATURES))
+    time_signature_note = f"Time signature: {time_signature}"
+    tempo = random.randrange(50, 120)
+    tempo_note = f"Tempo: {tempo} BPM"
+    song = [time_signature_note, tempo_note]
+    song += [capo_note] if capo else []
     logger.debug(capo_note)
     logger.debug("%s chords per line", num_chords_per_line)
     print(f"{num_introductory_verses} introductory verses (verses not followed by a chorus)")
