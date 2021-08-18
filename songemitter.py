@@ -38,8 +38,8 @@ GUITAR_WEIGHTS = {
     "G#": .2,
 }
 CHORD_MODES = {
-    "maj": {"weight": 1, "relation": 0},
-    "min": {"weight": 1, "relation": -3},
+    "major": {"weight": 1, "relation": 0, 'abbreviation': ''},
+    "minor": {"weight": 1, "relation": -3, 'abbreviation': 'm'},
 }
 VERSE_SCHEMA = {'abba', 'abab', 'abc'}
 TIME_SIGNATURES = {'4/4', '3/4'}
@@ -52,8 +52,7 @@ def random_mode_of_chord(chord):
     relation = CHORD_MODES[mode]['relation']
     new_chord_index = NOTES.index(chord) + relation
     new_chord = NOTES[new_chord_index]
-    if mode != "maj":
-        new_chord += mode
+    new_chord += CHORD_MODES[mode]['abbreviation']
     return new_chord
 
 
