@@ -80,13 +80,14 @@ def make_verse(num_chords_per_line):
     return tuple(lines[key] for key in scheme)
 
 def format_verse(lines, name="verse"):
-    verse = [f"[{name}]\n"]
+    verse = [f"[{name}]"]
     for line in lines:
         verse.append(" - ".join((chord for chord in line)))
     return "\n".join(verse)
 
 
 def main(verbosity=0):
+    print()
     num_introductory_verses = random.randrange(0, 2)  # verses not followed by a chorus  # nosec
     num_chords_per_line = random.randrange(2, 5)  # nosec
     num_verses = random.randrange(max(4, num_introductory_verses), 6)  # nosec
