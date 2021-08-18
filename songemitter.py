@@ -68,15 +68,6 @@ def note_distance(note_a, note_b):
     return (NOTES.index(note_b) - NOTES.index(note_a)) % 12
 
 
-class Chord:
-    """Python representation of an abstract chord."""
-
-    forms = "major", "minor"
-
-    def __init__(self, note, form):
-        self.note = note
-        self.form = form
-
 def make_line(num_chords_per_line):
     return tuple(random_major_chord_guitar_weighted() for _ in range(num_chords_per_line))
 
