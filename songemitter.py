@@ -24,30 +24,31 @@ INTERVALS = (
 )
 GUITAR_WEIGHTS = {
     # Not all guitar chords are equally ergonomic.
-    "A":  1,
-    "A#": .2,
-    "B":  .2,
-    "C":  1,
-    "C#": .2,
-    "D":  1,
-    "D#": .2,
-    "E":  1,
-    "F":  .8,
-    "F#": .2,
-    "G":  1,
-    "G#": .2,
+    "A": 1,
+    "A#": 0.2,
+    "B": 0.2,
+    "C": 1,
+    "C#": 0.2,
+    "D": 1,
+    "D#": 0.2,
+    "E": 1,
+    "F": 0.8,
+    "F#": 0.2,
+    "G": 1,
+    "G#": 0.2,
 }
 CHORD_MODES = {
     "major": {"weight": 1, "relation": 0, 'abbreviation': ''},
     "minor": {"weight": 1, "relation": -3, 'abbreviation': 'm'},
 }
-VERSE_SCHEMA = {'abba', 'abab', 'abc'}
+VERSE_SCHEMA = {'abba', 'abab', 'abcb', 'abb', 'aba'}
 TIME_SIGNATURES = {'4/4', '3/4'}
 
 
 def random_mode_of_chord(chord):
     mode = random.choices(
-        tuple(CHORD_MODES.keys()), weights=[item["weight"] for item in CHORD_MODES.values()]
+        tuple(CHORD_MODES.keys()),
+        weights=[item["weight"] for item in CHORD_MODES.values()],
     )[0]
     relation = CHORD_MODES[mode]['relation']
     new_chord_index = NOTES.index(chord) + relation
@@ -58,7 +59,9 @@ def random_mode_of_chord(chord):
 
 def random_major_chord_guitar_weighted():
     return random_mode_of_chord(
-        random.choices(tuple(GUITAR_WEIGHTS.keys()), weights=tuple(GUITAR_WEIGHTS.values()))[0]
+        random.choices(
+            tuple(GUITAR_WEIGHTS.keys()), weights=tuple(GUITAR_WEIGHTS.values())
+        )[0]
     )
 
 
@@ -70,13 +73,16 @@ def note_distance(note_a, note_b):
 
 
 def make_line(num_chords_per_line):
-    return tuple(random_major_chord_guitar_weighted() for _ in range(num_chords_per_line))
+    return tuple(
+        random_major_chord_guitar_weighted() for _ in range(num_chords_per_line)
+    )
 
 
 def make_verse(num_chords_per_line):
     scheme = random.choice(tuple(VERSE_SCHEMA))
     lines = {key: make_line(num_chords_per_line) for key in scheme}
     return tuple(lines[key] for key in scheme)
+
 
 def format_verse(lines, name="verse"):
     verse = [f"[{name}]"]
@@ -87,10 +93,12 @@ def format_verse(lines, name="verse"):
 
 def main(verbosity=0):
     print()
-    num_introductory_verses = random.randrange(0, 2)  # verses not followed by a chorus  # nosec
-    num_chords_per_line = random.randrange(2, 5)  # nosec
-    num_verses = random.randrange(max(4, num_introductory_verses), 6)  # nosec
-    capo = random.choice((None, random.randrange(1, 7)))  # nosec
+    num_introductory_verses = random.randrange(
+        0, 2
+    )  # verses not followed by a chorus
+    num_chords_per_line = random.randrange(2, 5)
+    num_verses = random.randrange(max(4, num_introductory_verses), 6)
+    capo = random.choice((None, random.randrange(1, 7)))
     verse = format_verse(make_verse(num_chords_per_line))
     chorus = format_verse(make_verse(num_chords_per_line), name="chorus")
     time_signature = random.choice(tuple(TIME_SIGNATURES))
@@ -123,7 +131,7 @@ def quick_parse_args():
         "-v: verbose\n"
         "-vv: very verbose\n"
     )
-    parsed_args = {'verbosity': 0}   # defaults
+    parsed_args = {'verbosity': 0}  # defaults
     unrecognized_args = set()
     for arg in sys.argv[1:]:
         if arg in ("-h", "--help"):
@@ -131,7 +139,7 @@ def quick_parse_args():
             sys.exit()
         elif set(arg) == {"-", "v"}:
             verbosity_options = (logging.WARNING, logging.INFO, logging.DEBUG)
-            verbosity = min(arg.count("v"), len(verbosity_options)-1)
+            verbosity = min(arg.count("v"), len(verbosity_options) - 1)
             parsed_args['verbosity'] = verbosity
             logger.setLevel(verbosity_options[verbosity])
         else:
