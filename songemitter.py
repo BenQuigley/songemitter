@@ -1,4 +1,5 @@
 """Songwriting script."""
+import json
 import logging
 import random
 import sys
@@ -131,6 +132,12 @@ class Song:
         if self.capo:
             header.append(f"Capo {self.capo}")
         return header
+
+    def serialize(self):
+        return self.__dict__
+
+    def json(self):
+        return json.dumps(self.serialize())
 
 
 def main(verbosity=0):
