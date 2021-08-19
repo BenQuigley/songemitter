@@ -58,11 +58,7 @@ def random_mode_of_chord(chord):
 
 
 def random_major_chord_guitar_weighted():
-    return random_mode_of_chord(
-        random.choices(
-            tuple(GUITAR_WEIGHTS.keys()), weights=tuple(GUITAR_WEIGHTS.values())
-        )[0]
-    )
+    return random.choices(tuple(GUITAR_WEIGHTS.keys()), weights=tuple(GUITAR_WEIGHTS.values()))[0]
 
 
 def note_distance(note_a, note_b):
@@ -72,10 +68,30 @@ def note_distance(note_a, note_b):
     return (NOTES.index(note_b) - NOTES.index(note_a)) % 12
 
 
-def make_line(num_chords_per_line):
-    return tuple(
-        random_major_chord_guitar_weighted() for _ in range(num_chords_per_line)
+def random_close_interval_int():
+    return random.choice(
+        (
+            2,  # whole step up
+            5,  # fourth  (fifth down)
+            7,  # fifth
+            10, # whole step down
+        )
     )
+
+
+def random_close_interval_note(prev_note):
+    prev_note_index = NOTES.index(prev_note)
+    interval = random_close_interval_int()
+    new_note_index = (prev_note_index + interval) % 12
+    new_note = NOTES[new_note_index]
+    return new_note
+
+
+def make_line(num_chords_per_line):
+    line = [random_major_chord_guitar_weighted()]
+    while len(line) < num_chords_per_line:
+        line.append(random_close_interval_note(line[-1]))
+    return [random_mode_of_chord(chord) for chord in line]
 
 
 def make_verse(num_chords_per_line):
