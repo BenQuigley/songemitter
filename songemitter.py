@@ -54,10 +54,10 @@ def random_common_guitar_major_chord():
 def random_close_interval_int():
     return random.choice(
         (
-            2,  # whole step up
-            5,  # fourth  (fifth down)
+            2,  # whole step up (two fifths up)
+            5,  # fourth (fifth down)
             7,  # fifth
-            10, # whole step down
+            10, # whole step down (two fifths down)
         )
     )
 
