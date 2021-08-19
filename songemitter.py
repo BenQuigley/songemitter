@@ -27,25 +27,21 @@ GUITAR_WEIGHTS = {
     "G": 1,
     "G#": 0.2,
 }
-CHORD_MODES = {
-    "major": {"weight": 1, "relation": 0, 'abbreviation': ''},
-    "minor": {"weight": 1, "relation": -3, 'abbreviation': 'm'},
-    "7th": {"weight": .3, "relation": 0, 'abbreviation': '7'},
-}
 VERSE_SCHEMA = {'abba', 'abab', 'abcb', 'abb', 'aba'}
 TIME_SIGNATURES = {'4/4', '3/4'}
 
 
 def random_mode_of_chord(chord):
-    mode = random.choices(
-        tuple(CHORD_MODES.keys()),
-        weights=[item["weight"] for item in CHORD_MODES.values()],
-    )[0]
-    relation = CHORD_MODES[mode]['relation']
-    new_chord_index = NOTES.index(chord) + relation
-    new_chord = NOTES[new_chord_index]
-    new_chord += CHORD_MODES[mode]['abbreviation']
-    return new_chord
+    # Maybe make a minor chord:
+    minor = random.random() < .5
+    if minor:
+        new_chord_index = NOTES.index(chord) - 3
+        chord = NOTES[new_chord_index]
+
+    # Maybe make a 7th chord:
+    seventh = random.random() < .15
+    formatted_chord = f"{chord}{'m' if minor else ''}{'7' if seventh else ''}"
+    return formatted_chord
 
 
 def random_common_guitar_major_chord():
