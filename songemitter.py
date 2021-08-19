@@ -30,6 +30,7 @@ GUITAR_WEIGHTS = {
 CHORD_MODES = {
     "major": {"weight": 1, "relation": 0, 'abbreviation': ''},
     "minor": {"weight": 1, "relation": -3, 'abbreviation': 'm'},
+    "7th": {"weight": .3, "relation": 0, 'abbreviation': '7'},
 }
 VERSE_SCHEMA = {'abba', 'abab', 'abcb', 'abb', 'aba'}
 TIME_SIGNATURES = {'4/4', '3/4'}
