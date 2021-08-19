@@ -12,16 +12,6 @@ logger.addHandler(handler)
 logger.setLevel(logging.WARNING)  # overwriteable by e.g. `-vv` in args
 
 NOTES = ("A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#")
-INTERVALS = (
-    "same note",  # 0
-    "half step",  # 1
-    "whole step",  # 2
-    "minor third",  # 3
-    "major third",  # 4
-    "fourth",  # 5
-    "tritone",  # 6
-    "fifth",  # 7
-)
 GUITAR_WEIGHTS = {
     # Not all guitar chords are equally ergonomic.
     "A": 1,
@@ -59,13 +49,6 @@ def random_mode_of_chord(chord):
 
 def random_major_chord_guitar_weighted():
     return random.choices(tuple(GUITAR_WEIGHTS.keys()), weights=tuple(GUITAR_WEIGHTS.values()))[0]
-
-
-def note_distance(note_a, note_b):
-    """Return the relationship between two notes."""
-    note_a = note_a.upper()
-    note_b = note_b.upper()
-    return (NOTES.index(note_b) - NOTES.index(note_a)) % 12
 
 
 def random_close_interval_int():
