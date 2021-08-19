@@ -78,16 +78,15 @@ def make_line(num_chords_per_line, base_chord=None):
     return [random_mode_of_chord(chord) for chord in line]
 
 
-def make_verse(num_chords_per_line):
+def make_verse(num_chords_per_line, base_chord=None):
     scheme = random.choice(tuple(VERSE_SCHEMA))
     unique_lines = {}
     lines = []
     for i, key in enumerate(scheme):
         if key not in unique_lines:
-            base_chord = random.choice(lines[i-1]) if i > 0 else None
             unique_lines[key] = make_line(num_chords_per_line, base_chord=base_chord)
         lines.append(unique_lines[key])
-    return tuple(lines[key] for key in scheme)
+    return lines
 
 
 def format_verse(lines, name="verse"):
@@ -105,8 +104,9 @@ def main(verbosity=0):
     num_chords_per_line = random.randrange(2, 5)
     num_verses = random.randrange(max(4, num_introductory_verses), 6)
     capo = random.choice((None, random.randrange(1, 7)))
-    verse = format_verse(make_verse(num_chords_per_line))
-    chorus = format_verse(make_verse(num_chords_per_line), name="chorus")
+    base_chord = random_common_guitar_major_chord()
+    verse = format_verse(make_verse(num_chords_per_line, base_chord=base_chord))
+    chorus = format_verse(make_verse(num_chords_per_line, base_chord=base_chord), name="chorus")
     time_signature = random.choice(tuple(TIME_SIGNATURES))
     tempo = random.randrange(50, 120)
     header = (
