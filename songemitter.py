@@ -71,8 +71,8 @@ def random_close_interval_note(prev_note):
     return new_note
 
 
-def make_line(num_chords_per_line):
-    line = [random_common_guitar_major_chord()]
+def make_line(num_chords_per_line, base_chord=None):
+    line = [random_close_interval_note(base_chord) if base_chord else random_common_guitar_major_chord()]
     while len(line) < num_chords_per_line:
         line.append(random_close_interval_note(line[-1]))
     return [random_mode_of_chord(chord) for chord in line]
@@ -80,7 +80,13 @@ def make_line(num_chords_per_line):
 
 def make_verse(num_chords_per_line):
     scheme = random.choice(tuple(VERSE_SCHEMA))
-    lines = {key: make_line(num_chords_per_line) for key in scheme}
+    unique_lines = {}
+    lines = []
+    for i, key in enumerate(scheme):
+        if key not in unique_lines:
+            base_chord = random.choice(lines[i-1]) if i > 0 else None
+            unique_lines[key] = make_line(num_chords_per_line, base_chord=base_chord)
+        lines.append(unique_lines[key])
     return tuple(lines[key] for key in scheme)
 
 
