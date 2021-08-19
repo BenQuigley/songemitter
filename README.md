@@ -24,3 +24,8 @@ Example output:
     Em - A - G
     F#m - G#m - C#m
     Em - A - G
+
+There is also a `verbose` mode where it will print that many verses and choruses, in case you are
+using it as a songwriting tool and want to use the output to start writing lyrics onto:
+
+    $ python3 songemitter -v
