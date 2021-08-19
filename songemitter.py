@@ -1,8 +1,9 @@
 """Songwriting script."""
-import sys
 import logging
 import random
-
+import sys
+from dataclasses import dataclass
+from typing import List, Optional
 
 logger = logging.getLogger()
 handler = logging.StreamHandler()
@@ -92,38 +93,60 @@ def format_verse(lines, name="verse"):
     return "\n".join(verse)
 
 
+@dataclass
+class Song:
+    num_introductory_verses: int  # verses not followed by a chorus
+    num_chords_per_line: int
+    num_verses: int
+    time_signature: str
+    tempo: int
+    verse: List[str]
+    chorus: List[str]
+    capo: Optional[int] = None
+
+    @classmethod
+    def make(cls):
+        num_introductory_verses = random.randrange(0, 2)
+        num_chords_per_line=random.randrange(2, 5)
+        base_chord=random_common_guitar_major_chord()
+        return cls(
+            num_introductory_verses=num_introductory_verses,
+            num_chords_per_line=num_chords_per_line,
+            num_verses=random.randrange(max(4, num_introductory_verses), 6),
+            capo=random.choice((None, random.randrange(1, 7))),
+            verse=make_verse(num_chords_per_line, base_chord=base_chord),
+            chorus=make_verse(num_chords_per_line, base_chord=base_chord),
+            time_signature=random.choice(tuple(TIME_SIGNATURES)),
+            tempo=random.randrange(50, 120),
+        )
+
+    @property
+    def header(self):
+        header = [
+            f"Time signature: {self.time_signature}",
+            f"Tempo: {self.tempo} BPM",
+            f"{self.num_introductory_verses} introductory verses (verses not followed by a chorus)",
+            f"{self.num_verses} verses total",
+        ]
+        if self.capo:
+            header.append(f"Capo {self.capo}")
+        return header
+
+
 def main(verbosity=0):
     print()
-    num_introductory_verses = random.randrange(
-        0, 2
-    )  # verses not followed by a chorus
-    num_chords_per_line = random.randrange(2, 5)
-    num_verses = random.randrange(max(4, num_introductory_verses), 6)
-    capo = random.choice((None, random.randrange(1, 7)))
-    base_chord = random_common_guitar_major_chord()
-    verse = format_verse(make_verse(num_chords_per_line, base_chord=base_chord))
-    chorus = format_verse(make_verse(num_chords_per_line, base_chord=base_chord), name="chorus")
-    time_signature = random.choice(tuple(TIME_SIGNATURES))
-    tempo = random.randrange(50, 120)
-    header = (
-        f"Time signature: {time_signature}\n"
-        f"Tempo: {tempo} BPM\n"
-        f"{num_introductory_verses} introductory verses (verses not followed by a chorus)\n"
-        f"{num_verses} verses total\n"
-    )
-    if capo:
-        header += f"Capo {capo}\n"
-    song = [header.strip()]
+    song = Song.make()
+    display = ['\n'.join(song.header)]
     if verbosity == 0:
-        song.append(verse)
-        song.append(chorus)
+        display.append(format_verse(song.verse))
+        display.append(format_verse(song.chorus))
     else:
-        for _ in range(num_introductory_verses):
-            song.append(verse)
-        for _ in range(num_introductory_verses, num_verses):
-            song.append(verse)
-            song.append(chorus)
-    print("\n\n".join(song))
+        for _ in range(song.num_introductory_verses):
+            display.append(format_verse(song.verse))
+        for _ in range(song.num_introductory_verses, song.num_verses):
+            display.append(format_verse(song.verse))
+            display.append(format_verse(song.chorus))
+    print("\n\n".join(display))
 
 
 def quick_parse_args():
