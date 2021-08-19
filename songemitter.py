@@ -47,7 +47,7 @@ def random_mode_of_chord(chord):
     return new_chord
 
 
-def random_major_chord_guitar_weighted():
+def random_common_guitar_major_chord():
     return random.choices(tuple(GUITAR_WEIGHTS.keys()), weights=tuple(GUITAR_WEIGHTS.values()))[0]
 
 
@@ -71,7 +71,7 @@ def random_close_interval_note(prev_note):
 
 
 def make_line(num_chords_per_line):
-    line = [random_major_chord_guitar_weighted()]
+    line = [random_common_guitar_major_chord()]
     while len(line) < num_chords_per_line:
         line.append(random_close_interval_note(line[-1]))
     return [random_mode_of_chord(chord) for chord in line]
