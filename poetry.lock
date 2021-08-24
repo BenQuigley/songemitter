@@ -1,0 +1,17 @@
+[[package]]
+category = "main"
+description = "Python to JavaScript compiler."
+name = "pscript"
+optional = false
+python-versions = "*"
+version = "0.7.5"
+
+[metadata]
+content-hash = "d1d09a59e72c4fc154ad098febba3c79ce67b5bf4e5f61c81d00ab84c83892f0"
+lock-version = "1.0"
+python-versions = "^3.8"
+
+[metadata.files]
+pscript = [
+    {file = "pscript-0.7.5.tar.gz", hash = "sha256:9217a291477af34833bef1880191467c8dda1bb09052e5f142b46904088e980d"},
+]
